@@ -40,7 +40,7 @@ func StartTracing() (*trace.TracerProvider, error) {
 		trace.WithResource(
 			resource.NewWithAttributes(
 				semconv.SchemaURL,
-				semconv.ServiceNameKey.String("product-app"),
+				semconv.ServiceNameKey.String("Trace-Impleentation-GOLANG"),
 			),
 		),
 	)
