@@ -1,48 +1,4 @@
 
-# Trace Implementation GOLANG
-
-
-
-
-## Content
-- Importing the Trace package from GitHub
-- Intialise the Trace function(StartTracing()) in Main function
-- Intialisation of Trace's and Span's in HTTP Handlers
-
-## Importing the Trace package from GitHub
-
-Create go mod file (It Contains all dependencies)
-
-```
-go mod init <your-folder>
-```
-
-Execute the below command in you termimal
-
-```
-go get github.com/Guruvamshi14/Trace-Implementation-GOLANG
-```
-Include this command in main function
-```
-import trace "github.com/Guruvamshi14/Trace-Implementation-GOLANG"
-```
-## Intialise the Trace function (Start-Tracing) in Main Function
-
-Include this in Mian function
-
-```
-tp, err := trace.StartTracing()
-	if err != nil {
-		log.Fatalf("failed to initialize tracing: %v", err)
-	}
-	defer func() {
-		if err := tp.Shutdown(context.Background()); err != nil {
-			log.Fatalf("failed to shutdown tracer provider: %v", err)
-		}
-	}()
-
-```
-
 ## Intialisation of Trace's and Span's in HTTP handlers
 
 Execute the command in you termimal
@@ -76,12 +32,23 @@ _, span2 := tracer.Start(ctx, "span-name2")
 defer span2.End()
 ```
 
-## compile 
+## Docker Command  to Export the Telemetry-data to Jeager
+
+```
+docker run --rm --name jaeger \
+  -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 \
+  -p 16686:16686 \
+  -p 4318:4318 \
+  jaegertracing/all-in-one:1.56
+
+```
+
+## Compile 
 ```
 go build .
 ```
 
-## run
+## Run
 ```
 go run .
 ```
@@ -90,3 +57,4 @@ go run .
 If you have any doubts about initializing a trace or span, you can refer to the mini project on tracing in Go.
 
 [GOLANG Mini Project](https://github.com/Guruvamshi14/GOLANG-Mini-Project-trace-Application)
+
