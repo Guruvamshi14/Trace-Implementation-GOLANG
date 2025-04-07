@@ -1,60 +1,127 @@
+# Trace Implementation GOLANG
 
-## Intialisation of Trace's and Span's in HTTP handlers
+## Content
+- Importing the Trace package from GitHub
+- Initializing the Trace function (`StartTracing()`) in the main function
+- Initialization of Traces and Spans in HTTP Handlers
 
-Execute the command in you termimal
+---
 
+## Importing the Trace package from GitHub
+
+Create a Go module file (this will include all dependencies):
+
+```bash
+go mod init <your-folder>
 ```
+
+Run the following command in your terminal:
+
+```bash
+go get github.com/Guruvamshi14/Trace-Implementation-GOLANG
+```
+
+Import the package in your main file:
+
+```go
+import trace "github.com/Guruvamshi14/Trace-Implementation-GOLANG"
+```
+
+---
+
+## Initializing the Trace function (`StartTracing()`) in the Main Function
+
+Add the following code to your `main` function:
+
+```go
+tp, err := trace.StartTracing()
+if err != nil {
+	log.Fatalf("Failed to initialize tracing: %v", err)
+}
+defer func() {
+	if err := tp.Shutdown(context.Background()); err != nil {
+		log.Fatalf("Failed to shutdown tracer provider: %v", err)
+	}
+}()
+```
+
+---
+
+## Initialization of Traces and Spans in HTTP Handlers
+
+Run the following command in your terminal:
+
+```bash
 go get go.opentelemetry.io/otel
 ```
-Include this command in HTTP handlers at top of the file
 
-```
+Import this package at the top of your HTTP handler file:
+
+```go
 import "go.opentelemetry.io/otel"
 ```
 
-Intialisation of Trace Function
+### Step 1: Initialize the Tracer
 
-```
+```go
 tracer := otel.Tracer("Handler-Name")
 ```
 
-Span Tag (Create a parent Span)
-```
+### Step 2: Create a Parent Span
+
+```go
 ctx, parentSpan := tracer.Start(r.Context(), "Handler-Name")
 defer parentSpan.End()
 ```
 
-Child span(ctx is passed as parameter, so that every span will have same trace ID)
-```
+### Step 3: Create Child Spans  
+Pass the same `ctx` to maintain the same trace ID:
+
+```go
 _, span1 := tracer.Start(ctx, "span-name1")
 defer span1.End()
+
 _, span2 := tracer.Start(ctx, "span-name2")
 defer span2.End()
 ```
 
-## Docker Command  to Export the Telemetry-data to Jeager
+---
 
-```
+## Docker Command to Export Telemetry Data to Jaeger
+
+Run the following Docker command to start Jaeger:
+
+```bash
 docker run --rm --name jaeger \
   -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 \
   -p 16686:16686 \
   -p 4318:4318 \
   jaegertracing/all-in-one:1.56
-
 ```
 
-## Compile 
-```
+Access the Jaeger UI at: [http://localhost:16686](http://localhost:16686)
+
+---
+
+## Compile
+
+```bash
 go build .
 ```
 
+---
+
 ## Run
-```
+
+```bash
 go run .
 ```
 
-## Reference 
-If you have any doubts about initializing a trace or span, you can refer to the mini project on tracing in Go.
+---
 
-[GOLANG Mini Project](https://github.com/Guruvamshi14/GOLANG-Mini-Project-trace-Application)
+## Reference
+
+If you have any doubts about initializing a trace or span, you can refer to this mini project on tracing in Go:
+
+👉 [GOLANG Mini Project](https://github.com/Guruvamshi14/GOLANG-Mini-Project-trace-Application)
 
